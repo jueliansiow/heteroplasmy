@@ -20,7 +20,7 @@ rev_subtrim=$basedir"subtrim$rev_reads"
 
 # Run the subset script
 seqtk sample -s100 $fwd_reads $num_reads > $fwd_subset
-seqtk sample -s100 $fwd_reads $num_reads > $rev_subset
+seqtk sample -s100 $rev_reads $num_reads > $rev_subset
 
 
 # Run the quality trimming. Default is set to 0.05% probability.
