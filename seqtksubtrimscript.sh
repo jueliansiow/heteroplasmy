@@ -8,7 +8,6 @@ read -e -p "Enter a fraction (in decimals) or the number of reads you would like
 #changing the file format from .fastq to .fq so that seqtk accepts the file. Apparently not needed.
 #for f in *.fastq; do mv $f `basename $f .fastq`.fq; done
 
-
 # find/define files and directories.
 basedir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 fwd_reads=$(find $basedir -name '*R1*')
@@ -18,9 +17,9 @@ rev_name=$(basename $rev_reads)
 
 # Output file.
 fwd_trim=$basedir"/sub_$fwd_name"
-rev_trim=$basedir"sub_$rev_name"
-fwd_subtrim=$basedir"trim_$fwd_name"
-rev_subtrim=$basedir"trim_$rev_name"
+rev_trim=$basedir"/sub_$rev_name"
+fwd_subtrim=$basedir"/trim_$fwd_name"
+rev_subtrim=$basedir"/trim_$rev_name"
 
 # Run the quality trimming. Default is set to 0.05% probability.
 seqtk trimfq $fwd_reads > $fwd_trim
