@@ -16,10 +16,10 @@ fwd_name=$(basename $fwd_reads)
 rev_name=$(basename $rev_reads)
 
 # Output file.
-fwd_trim=$basedir"/sub_$fwd_name"
-rev_trim=$basedir"/sub_$rev_name"
-fwd_subtrim=$basedir"/trim_$fwd_name"
-rev_subtrim=$basedir"/trim_$rev_name"
+fwd_trim=$basedir"/trim_$fwd_name"
+rev_trim=$basedir"/trim_$rev_name"
+fwd_subtrim=$basedir"/sub_$fwd_name"
+rev_subtrim=$basedir"/sub_$rev_name"
 
 # Run the quality trimming. Default is set to 0.05% probability.
 seqtk trimfq $fwd_reads > $fwd_trim
