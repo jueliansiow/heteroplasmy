@@ -2,7 +2,7 @@
 
 
 # How many reads do you want to end up with?
-read -e -p "Enter the number of reads you would like: " numreads
+read -e -p "Enter a fraction (in decimals) or the number of reads you would like: " numreads
 
 
 #changing the file format from .fastq to .fq so that seqtk accepts the file. Apparently not needed.
