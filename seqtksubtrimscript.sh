@@ -13,6 +13,10 @@ case $i in
     DIRECTORY="${i#*=}"
     shift # past argument=value
     ;;
+    -o=*|--output=*)
+    OUTPUT="${i#*=}"
+    shift # past argument=value
+    ;;
     --default)
     DEFAULT=YES
     shift # past argument with no value
