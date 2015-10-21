@@ -36,6 +36,13 @@ echo "Directory        = ${DIRECTORY}"
 basedir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 fwd_reads=$(find $basedir -name '*R1*.gz')
 rev_reads=$(find $basedir -name '*R2*.gz')
+
+
+# Unzip the files
+#gzcat $fwd_reads
+#gzcat $fwd_reads
+
+
 fwd_name=$(basename $fwd_reads)
 rev_name=$(basename $rev_reads)
 
@@ -47,10 +54,6 @@ fwd_trim=$basedir"/trim_$fwd_name"
 rev_trim=$basedir"/trim_$rev_name"
 fwd_subtrim=$basedir"/subtrim_$fwd_name"
 rev_subtrim=$basedir"/subtrim_$rev_name"
-
-
-# Unzip the files
-#unzip=$(gzcat $fwd_reads)
 
 
 # Changing the file format from .fastq to .fq so that seqtk accepts the file.
