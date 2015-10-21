@@ -14,6 +14,7 @@ temp1=$basedir"/temp1.fq"
 temp2=$basedir"/temp1.fq"
 mergepe=$basedir"/mergepe.fq"
 trim_mergepe=$basedir"/trim_mergepe.fq"
+trim_mergepeonly=$basedir"/trim_mergepeonly.fq"
 subtrim_mergepe=$basedir"/subtrim_mergepe.fq"
 
 
@@ -35,6 +36,9 @@ seqtk mergepe $temp1 $temp2 > $mergepe
 # Run the quality trimming. Default is set to 0.05% probability.
 seqtk trimfq $mergepe > $trim_mergepe
 
+
+# Remove reads that do not have a pair anymore
+seqtk dropse $trim_mergepe > $trim_mergepeonly
 
 
 
