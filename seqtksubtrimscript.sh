@@ -1,6 +1,81 @@
 #!/bin/sh
 
 
+# find/define files and directories.
+basedir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+fwd_reads=$(find $basedir -name '*R1*.gz')
+rev_reads=$(find $basedir -name '*R2*.gz')
+fwd_name=$(basename $fwd_reads)
+rev_name=$(basename $rev_reads)
+
+
+# Output file.
+temp1=$basedir"/temp1.fq"
+temp2=$basedir"/temp1.fq"
+mergepe=$basedir"/mergepe.fq"
+trim_mergepe=$basedir"/trim_mergepe.fq"
+subtrim_mergepe=$basedir"/subtrim_mergepe.fq"
+
+
+# Unzip the files
+gzcat $fwd_reads > $temp1
+gzcat $rev_reads > $temp2
+
+
+# Changing the file format from .fastq to .fq so that seqtk accepts the file.
+# Apparently not needed. Can use to remove .gz from file name.
+# Need to be careful when choosing file names.
+# for f in *.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
+
+
+# Interleave the pair end files
+seqtk mergepe $temp1 $temp2 > $mergepe
+
+
+# Run the quality trimming. Default is set to 0.05% probability.
+seqtk trimfq $mergepe > $trim_mergepe
+
+
+
+
+
+# Run the subset script.
+seqtk sample -s100 $trim_mergepe ${NUM_READS} > $subtrim_mergepe
+
+
+# Separate files
+
+
+
+# Remove temporary files
+rm $temp1
+rm $temp2
+rm $mergepe
+rm $trim_mergepe
+rm $subtrim_mergepe
+
+
+
+
+
+# stop the script running the other processes
+exit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #options when running the script
 for i in "$@"
 do
@@ -36,54 +111,4 @@ echo "OUTPUT           = ${LIBPATH}"
 #fi
 
 
-# find/define files and directories.
-basedir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-fwd_reads=$(find $basedir -name '*R1*.gz')
-rev_reads=$(find $basedir -name '*R2*.gz')
-fwd_name=$(basename $fwd_reads)
-rev_name=$(basename $rev_reads)
 
-
-# Unzip the files
-#gzcat $fwd_reads > $temp1
-#gzcat $rev_reads > $temp2
-
-
-# Output file.
-fwd_unzip=$basedir"/unzip_$fwd_name"
-rev_unzip=$basedir"/unzip_$rev_name"
-fwd_trim=$basedir"/trim_$fwd_name"
-rev_trim=$basedir"/trim_$rev_name"
-fwd_subtrim=$basedir"/subtrim_$fwd_name"
-rev_subtrim=$basedir"/subtrim_$rev_name"
-temp1=$basedir"/temp1.fq"
-temp2=$basedir"/temp1.fq"
-mergepe=$basedir"/mergepe.fq"
-
-
-# Changing the file format from .fastq to .fq so that seqtk accepts the file.
-# Apparently not needed. Can use to remove .gz from file name.
-# Need to be careful when choosing file names.
-# for f in *.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
-
-
-# Interleave the pair end files
-seqtk mergepe $temp1 $temp2 > $mergepe
-
-
-
-
-
-# Run the quality trimming. Default is set to 0.05% probability.
-#seqtk trimfq $fwd_reads > $fwd_trim
-#seqtk trimfq $rev_reads > $rev_trim
-
-
-# Run the subset script.
-#seqtk sample -s100 $fwd_trim ${NUM_READS} > $fwd_subtrim
-#seqtk sample -s100 $rev_trim ${NUM_READS} > $rev_subtrim
-
-# Remove temporary files
-rm $temp1
-rm $temp2
-rm $mergepe
