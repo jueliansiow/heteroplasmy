@@ -28,7 +28,7 @@ esac
 done
 echo "Number of reads  = ${NUM_READS}"
 echo "Directory        = ${DIRECTORY}"
-#echo "LIBRARY PATH    = ${LIBPATH}"
+echo "OUTPUT           = ${LIBPATH}"
 #echo "Number files in SEARCH PATH with EXTENSION:" $(ls -1 "${SEARCHPATH}"/*."${EXTENSION}" | wc -l)
 #if [[ -n $1 ]]; then
 #    echo "Last line of file specified as non-opt/last argument:"
@@ -40,15 +40,13 @@ echo "Directory        = ${DIRECTORY}"
 basedir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 fwd_reads=$(find $basedir -name '*R1*.gz')
 rev_reads=$(find $basedir -name '*R2*.gz')
+fwd_name=$(basename $fwd_reads)
+rev_name=$(basename $rev_reads)
 
 
 # Unzip the files
-#gzcat $fwd_reads
-#gzcat $fwd_reads
-
-
-fwd_name=$(basename $fwd_reads)
-rev_name=$(basename $rev_reads)
+#gzcat $fwd_reads > $temp1
+#gzcat $rev_reads > $temp2
 
 
 # Output file.
@@ -58,6 +56,9 @@ fwd_trim=$basedir"/trim_$fwd_name"
 rev_trim=$basedir"/trim_$rev_name"
 fwd_subtrim=$basedir"/subtrim_$fwd_name"
 rev_subtrim=$basedir"/subtrim_$rev_name"
+temp1=$basedir"/temp1.fq"
+temp2=$basedir"/temp1.fq"
+mergepe=$basedir"/mergepe.fq"
 
 
 # Changing the file format from .fastq to .fq so that seqtk accepts the file.
@@ -67,7 +68,10 @@ rev_subtrim=$basedir"/subtrim_$rev_name"
 
 
 # Interleave the pair end files
-#seqtk mergepe $fwd_reads $rev_reads
+seqtk mergepe $temp1 $temp2 > $mergepe
+
+
+
 
 
 # Run the quality trimming. Default is set to 0.05% probability.
@@ -79,6 +83,7 @@ rev_subtrim=$basedir"/subtrim_$rev_name"
 #seqtk sample -s100 $fwd_trim ${NUM_READS} > $fwd_subtrim
 #seqtk sample -s100 $rev_trim ${NUM_READS} > $rev_subtrim
 
-
-
-
+# Remove temporary files
+rm $temp1
+rm $temp2
+rm $mergepe
