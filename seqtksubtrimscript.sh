@@ -37,18 +37,21 @@ seqtk mergepe $temp1 $temp2 > $mergepe
 seqtk trimfq $mergepe > $trim_mergepe
 
 
+# Remove reads that have N's in it
+
+# Remove reads below length threshold 
+
+
 # Remove reads that do not have a pair anymore
 seqtk dropse $trim_mergepe > $trim_mergepeonly
 
 
+# Separate files
+# fastqutils split -ignorepaired $trim_mergepeonly trim
 
 
 # Run the subset script.
 seqtk sample -s100 $trim_mergepe ${NUM_READS} > $subtrim_mergepe
-
-
-# Separate files
-
 
 
 # Remove temporary files
