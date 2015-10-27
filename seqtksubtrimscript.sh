@@ -11,9 +11,10 @@ rev_name=$(basename $rev_reads)
 
 # Output file.
 temp1=$basedir"/temp1.fq"
-temp2=$basedir"/temp1.fq"
+temp2=$basedir"/temp2.fq"
 mergepe=$basedir"/mergepe.fq"
 trim_mergepe=$basedir"/trim_mergepe.fq"
+wsp_trim_mergepe=$basedir"/wsp_trim_mergepe.fq"
 trim_mergepeonly=$basedir"/trim_mergepeonly.fq"
 subtrim_mergepe=$basedir"/subtrim_mergepe.fq"
 
@@ -26,7 +27,7 @@ gzcat $rev_reads > $temp2
 # Changing the file format from .fastq to .fq so that seqtk accepts the file.
 # Apparently not needed. Can use to remove .gz from file name.
 # Need to be careful when choosing file names.
-# for f in *.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
+#        for f in *.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
 
 
 # Interleave the pair end files
@@ -37,13 +38,8 @@ seqtk mergepe $temp1 $temp2 > $mergepe
 seqtk trimfq $mergepe > $trim_mergepe
 
 
-# Remove reads that have N's in it
-
-# Remove reads below length threshold 
-
-
-# Remove reads that do not have a pair anymore
-seqtk dropse $trim_mergepe > $trim_mergepeonly
+# Remove reads that have N's in it, reads below length threshold and do not have a pair.
+fastqutils filter -wildcard 1 -size ${READLENGTH} -paired $trim_mergepe > $wsp_trim_mergepe
 
 
 # Separate files
@@ -99,6 +95,10 @@ case $i in
     OUTPUT="${i#*=}"
     shift # past argument=value
     ;;
+    -m=*|--minread_length=*)
+    READLENGTH="${i#*=}"
+    shift # past argument=value
+    ;;
     --default)
     DEFAULT=YES
     shift # past argument with no value
@@ -111,6 +111,7 @@ done
 echo "Number of reads  = ${NUM_READS}"
 echo "Directory        = ${DIRECTORY}"
 echo "OUTPUT           = ${LIBPATH}"
+echo "READLENGTH       = ${READLENGTH}"
 #echo "Number files in SEARCH PATH with EXTENSION:" $(ls -1 "${SEARCHPATH}"/*."${EXTENSION}" | wc -l)
 #if [[ -n $1 ]]; then
 #    echo "Last line of file specified as non-opt/last argument:"
