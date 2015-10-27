@@ -26,12 +26,6 @@ gzcat $fwd_reads > $temp1
 gzcat $rev_reads > $temp2
 
 
-# Changing the file format from .fastq to .fq so that seqtk accepts the file.
-# Apparently not needed. Can use to remove .gz from file name.
-# Need to be careful when choosing file names.
-#        for f in *.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
-
-
 # Interleave the pair end files
 seqtk mergepe $temp1 $temp2 > $mergepe
 
