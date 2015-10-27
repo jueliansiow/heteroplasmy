@@ -15,9 +15,8 @@ temp2=$basedir"/temp2.fq"
 mergepe=$basedir"/mergepe.fq"
 trim_mergepe=$basedir"/trim_mergepe.fq"
 wsp_trim_mergepe=$basedir"/wsp_trim_mergepe.fq"
-trim_mergepeonly=$basedir"/trim_mergepeonly.fq"
-subtrim_mergepe=$basedir"/subtrim_mergepe.fq"
-
+fwd_trim=$basedir"/fwd_trim.fq"
+rev_trim=$basedir"/rev_trim.fq"
 
 # Unzip the files
 gzcat $fwd_reads > $temp1
@@ -42,12 +41,13 @@ seqtk trimfq $mergepe > $trim_mergepe
 fastqutils filter -wildcard 1 -size ${READLENGTH} -paired $trim_mergepe > $wsp_trim_mergepe
 
 
-# Separate files
-# fastqutils split -ignorepaired $trim_mergepeonly trim
+# Separate files. Not sure how to deal with this naming convention.
+fastqutils unmerge $wsp_trim_mergepe temptrim
 
 
 # Run the subset script.
-seqtk sample -s100 $trim_mergepe ${NUM_READS} > $subtrim_mergepe
+seqtk sample -s100 temptrim.1.fastq ${NUM_READS} > $fwd_trim
+seqtk sample -s100 temptrim.2.fastq ${NUM_READS} > $rev_trim
 
 
 # Remove temporary files
@@ -56,6 +56,8 @@ rm $temp2
 rm $mergepe
 rm $trim_mergepe
 rm $subtrim_mergepe
+rm temptrim.1.fastq
+rm temptrim.2.fastq
 
 
 
