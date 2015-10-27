@@ -17,6 +17,9 @@ trim_mergepe=$basedir"/trim_mergepe.fq"
 wsp_trim_mergepe=$basedir"/wsp_trim_mergepe.fq"
 fwd_trim=$basedir"/fwd_trim.fq"
 rev_trim=$basedir"/rev_trim.fq"
+fwd_final_name=$basedir"/sub_$fwd_name"
+rev_final_name=$basedir"/sub_$rev_name"
+
 
 # Unzip the files
 gzcat $fwd_reads > $temp1
@@ -48,6 +51,16 @@ fastqutils unmerge $wsp_trim_mergepe temptrim
 # Run the subset script.
 seqtk sample -s100 temptrim.1.fastq ${NUM_READS} > $fwd_trim
 seqtk sample -s100 temptrim.2.fastq ${NUM_READS} > $rev_trim
+
+
+# Rename the files for final output
+mv $fwd_trim $fwd_final_name
+mv $rev_trim $rev_final_name
+
+
+# Changing the file name of final output files to reflect that it isnt a .gz file.
+
+for f in sub_*.fastq.gz; do echo mv $f `basename $f .fastq.gz`.fq; done
 
 
 # Remove temporary files
