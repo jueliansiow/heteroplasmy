@@ -153,6 +153,7 @@ temp2=$outputdirectory"/temp2.fq"
 mergepe=$outputdirectory"/mergepe.fq"
 trim_mergepe=$outputdirectory"/trim_mergepe.fq"
 wsp_trim_mergepe=$outputdirectory"/wsp_trim_mergepe.fq"
+trimI=$outputdirectory"/trimI_$fwd_name"
 fwd_trim=$outputdirectory"/fwd_trim.fq"
 rev_trim=$outputdirectory"/rev_trim.fq"
 fwd_final_name=$outputdirectory"/sub_$fwd_name"
@@ -178,6 +179,11 @@ fastqutils filter -wildcard 1 -size $minreadlgth -paired $trim_mergepe > $wsp_tr
 
 #### Separate files. Not sure how to deal with this naming convention.
 fastqutils unmerge $wsp_trim_mergepe temptrim
+
+
+#### Rename the file where reads have been trimmed, N's removed, length checked and pairs checked.
+mv $wsp_trim_mergepe $trimI
+for f in trimI_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
 
 
 #### Run the subset script.
