@@ -192,7 +192,7 @@ mv $rev_trim $rev_final_name
 
 #### Changing the file name of final output files to reflect that it isnt a .gz file.
 
-for f in sub_*.fastq.gz; do echo mv $f `basename $f .fastq.gz`.fq; done
+for f in sub_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
 
 
 #### Remove temporary files
