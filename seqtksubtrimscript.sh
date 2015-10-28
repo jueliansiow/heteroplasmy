@@ -191,7 +191,12 @@ mv $rev_trim $rev_final_name
 
 
 #### Changing the file name of final output files to reflect that it isnt a .gz file.
-for f in sub_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fastq; done
+for f in sub_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
+
+
+#### gzip the files back up
+gzip $(find $inputdirectory -name 'sub_*R1*.fq')
+gzip $(find $inputdirectory -name 'sub_*R2*.fq')
 
 
 #### Remove temporary files
