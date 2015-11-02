@@ -178,7 +178,9 @@ fastqutils filter -wildcard 1 -size $minreadlgth -paired $trim_mergepe > $wsp_tr
 
 
 #### Change the working directory so that the intermediate file is stored in the output directory.
-mktemp -d $RANDOM
+cd $outputdirectory
+mktemp -d $RANDOM > tempfilename
+cd $(head tempfilename)
 
 
 #### Separate files. Not sure how to deal with this naming convention.
