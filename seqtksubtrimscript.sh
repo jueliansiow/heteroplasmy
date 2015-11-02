@@ -178,35 +178,16 @@ fastqutils filter -wildcard 1 -size $minreadlgth -paired $trim_mergepe > $wsp_tr
 
 
 #### Change the working directory so that the intermediate file is stored in the output directory.
-cd $outputdirectory
+mktemp -d $RANDOM
 
 
 #### Separate files. Not sure how to deal with this naming convention.
-fastqutils unmerge $wsp_trim_mergepe temptrim
+fastqutils unmerge -gz $wsp_trim_mergepe temptrim
 
 
 #### Rename the file where reads have been trimmed, N's removed, length checked and pairs checked.
 mv $wsp_trim_mergepe $trimI
 for f in trimI_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
-
-
-#### Run the subset script.
-seqtk sample -s100 temptrim.1.fastq $numreads > $fwd_trim
-seqtk sample -s100 temptrim.2.fastq $numreads > $rev_trim
-
-
-#### Rename the files for final output
-mv $fwd_trim $fwd_final_name
-mv $rev_trim $rev_final_name
-
-
-#### Changing the file name of final output files to reflect that it isnt a .gz file.
-for f in sub_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
-
-
-#### gzip the files back up
-gzip $(find $inputdirectory -name 'sub_*R1*.fq')
-gzip $(find $inputdirectory -name 'sub_*R2*.fq')
 
 
 #### Remove temporary files
