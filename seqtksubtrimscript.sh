@@ -179,7 +179,7 @@ fastqutils filter -wildcard 1 -size $minreadlgth -paired $trim_mergepe > $wsp_tr
 
 #### Change the working directory so that the intermediate file is stored in the output directory.
 cd $outputdirectory
-mktemp -d $RANDOM > tempfilename
+mktemp -d -t $RANDOM > tempfilename
 cd $(head tempfilename)
 
 
@@ -192,13 +192,19 @@ mv $wsp_trim_mergepe $trimI
 for f in trimI_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
 
 
+#### Rename the files where reads have been unmerged
+mv -v -i $(head tempfilename)/temptrim.1.fastq.gz $outputdirectory
+mv -v -i $(head tempfilename)/temptrim.2.fastq.gz $outputdirectory
+
+
 #### Remove temporary files
 rm $temp1
 rm $temp2
 rm $mergepe
 rm $trim_mergepe
 rm $subtrim_mergepe
-rm temptrim.1.fastq
-rm temptrim.2.fastq
+rm temptrim.1.fastq.gz
+rm temptrim.2.fastq.gz
 
-exit
+
+#### exit
