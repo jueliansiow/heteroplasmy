@@ -177,6 +177,10 @@ seqtk trimfq $mergepe > $trim_mergepe
 fastqutils filter -wildcard 1 -size $minreadlgth -paired $trim_mergepe > $wsp_trim_mergepe
 
 
+#### Change the working directory so that the intermediate file is stored in the output directory.
+cd $outputdirectory
+
+
 #### Separate files. Not sure how to deal with this naming convention.
 fastqutils unmerge $wsp_trim_mergepe temptrim
 
@@ -214,4 +218,4 @@ rm $subtrim_mergepe
 rm temptrim.1.fastq
 rm temptrim.2.fastq
 
-
+exit
