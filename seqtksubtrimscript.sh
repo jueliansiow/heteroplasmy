@@ -171,24 +171,9 @@ cd $outputdirectory
 fastqutils unmerge -gz $wsp_trim_mergepe temptrim
 
 
-##### Rename the file where reads have been trimmed, N's removed, length checked and pairs checked.
-mv $wsp_trim_mergepe $trimI
-for f in trimI_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
-
-
-##### Changing the file name of final output files.
-mv temptrim.1.fastq.gz trim_$fwd_name
-mv temptrim.2.fastq.gz trim_$rev_name
-
-
 ##### Remove temporary files
 rm $temp1
 rm $temp2
 rm $mergepe
 rm $trim_mergepe
 rm $subtrim_mergepe
-rm temptrim.1.fastq.gz
-rm temptrim.2.fastq.gz
-
-
-##### exit
