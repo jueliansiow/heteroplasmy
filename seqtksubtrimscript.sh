@@ -165,13 +165,12 @@ cd $outputdirectory
 
 
 ##### Separate files. Not sure how to deal with this naming convention.
-fastqutils unmerge $wsp_trim_mergepe $(echo "${fwd_reads%_*_*_*_*.*.*}")
+fastqutils unmerge $wsp_trim_mergepe unmerged_$(echo "${fwd_reads%_*_*_*_*.*.*}")
 
 
 #### Rename the file where reads have been trimmed, N's removed, length checked and pairs checked.
 mv $wsp_trim_mergepe $trimI
 for f in trimI_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
-
 
 
 ##### Remove temporary files
