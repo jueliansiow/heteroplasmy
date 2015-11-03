@@ -12,13 +12,13 @@ function show_help()
     echo "\t-n --numreads = Enter the number of reads that you would like to end up with after sub sampling. The number can be a specific number of reads or a fraction of the reads in decimals."
     echo "\t-o --outputdirectory= Enter the directory where files will be output to after analysis."
     echo "\t-i --inputdirectory= Enter the directory where the files are to be used for analysis."
-    echo "\t-m --minreadlgth= Enter the mininum read length you would like to keep after trimming."
+    echo "\t-a --arc_config= Enter the path to the ARC config file that has been supplied with this script."
     echo ""
 }
 
 numreads=
 outputdirectory=
-minreadlgth=
+arc_config=
 inputdirectory=
 
 while :; do
@@ -66,21 +66,21 @@ while :; do
             break
             ;;
             
-		-m|--minreadlgth)       # Takes an option argument, ensuring it has been specified.
+		-m|--arc_config)       # Takes an option argument, ensuring it has been specified.
             if [ -n "$2" ]; then
-                minreadlgth=$2
+                arc_config=$2
                 shift 2
                 continue
             else
-                printf 'ERROR: "--minreadlgth" requires a non-empty option argument.\n' >&2
+                printf 'ERROR: "--arc_config" requires a non-empty option argument.\n' >&2
                 exit 1
             fi
             ;;
-        --minreadlgth=?*)
+        --arc_config=?*)
             minreadlgth=${1#*=} # Delete everything up to "=" and assign the remainder.
             ;;
-        --minreadlgth=)         # Handle the case of an empty --file=
-            printf 'ERROR: "--minreadlgth" requires a non-empty option argument.\n' >&2
+        --arc_config=)         # Handle the case of an empty --file=
+            printf 'ERROR: "--arc_config" requires a non-empty option argument.\n' >&2
             exit 1
             ;;
 		-i|--intputdirectory)
@@ -124,8 +124,8 @@ if [ -z "$outputdirectory" ]; then
     exit 1
 fi
 
-if [ -z "$minreadlgth" ]; then
-    printf 'ERROR: option "--minreadlgth FILE" not given. See --help.\n' >&2
+if [ -z "$arc_config" ]; then
+    printf 'ERROR: option "--arc_config FILE" not given. See --help.\n' >&2
     exit 1
 fi
 
@@ -134,20 +134,21 @@ if [ -z "$inputdirectory" ]; then
     exit 1
 fi
 
-echo $numreads
-echo $outputdirectory
-echo $minreadlgth
 echo $inputdirectory
+echo $outputdirectory
+echo $numreads
+echo $arc_config
 
 
-#### find/define files and directories.
+
+##### find/define files and directories.
 fwd_reads=$(find $inputdirectory -name '*R1*.gz')
 rev_reads=$(find $inputdirectory -name '*R2*.gz')
 fwd_name=$(basename $fwd_reads)
 rev_name=$(basename $rev_reads)
 
 
-#### Output file.
+##### Output file.
 temp1=$outputdirectory"/temp1.fq"
 temp2=$outputdirectory"/temp2.fq"
 mergepe=$outputdirectory"/mergepe.fq"
@@ -156,66 +157,31 @@ wsp_trim_mergepe=$outputdirectory"/wsp_trim_mergepe.fq"
 trimI=$outputdirectory"/trimI_$fwd_name"
 fwd_trim=$outputdirectory"/fwd_trim.fq"
 rev_trim=$outputdirectory"/rev_trim.fq"
-fwd_final_name=$outputdirectory"/sub_$fwd_name"
-rev_final_name=$outputdirectory"/sub_$rev_name"
 
 
-#### Unzip the files
+##### Unzip the files
 gzcat $fwd_reads > $temp1
 gzcat $rev_reads > $temp2
 
 
-#### Interleave the pair end files
-seqtk mergepe $temp1 $temp2 > $mergepe
-
-
-#### Run the quality trimming. Default is set to 0.05% probability.
-seqtk trimfq $mergepe > $trim_mergepe
-
-
-#### Remove reads that have N's in it, reads below length threshold and do not have a pair.
-fastqutils filter -wildcard 1 -size $minreadlgth -paired $trim_mergepe > $wsp_trim_mergepe
-
-
-#### Change the working directory so that the intermediate file is stored in the output directory.
+##### Change the working directory
 cd $outputdirectory
 
-
-#### Separate files. Not sure how to deal with this naming convention.
-fastqutils unmerge -gz $wsp_trim_mergepe temptrim
-
-
-#### Rename the file where reads have been trimmed, N's removed, length checked and pairs checked.
-mv $wsp_trim_mergepe $trimI
-for f in trimI_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
+##### Run the subset script.
+seqtk sample -s100 temptrim.1.fastq $numreads > fwd_trim.fastq
+seqtk sample -s100 temptrim.2.fastq $numreads > rev_trim.fastq
 
 
-#### Run the subset script.
-seqtk sample -s100 temptrim.1.fastq $numreads > $fwd_trim
-seqtk sample -s100 temptrim.2.fastq $numreads > $rev_trim
+##### Run the ARC assembler
+arc -c $arc_config
 
 
-#### Rename the files for final output
-mv $fwd_trim $fwd_final_name
-mv $rev_trim $rev_final_name
-
-
-#### Changing the file name of final output files to reflect that it isnt a .gz file.
-for f in sub_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
-
-
-#### gzip the files back up
-gzip $(find $inputdirectory -name 'sub_*R1*.fq')
-gzip $(find $inputdirectory -name 'sub_*R2*.fq')
-
-
-#### Remove temporary files
+##### Remove temporary files
 rm $temp1
 rm $temp2
 rm $mergepe
 rm $trim_mergepe
 rm $subtrim_mergepe
-rm temptrim.1.fastq
-rm temptrim.2.fastq
+
 
 exit
