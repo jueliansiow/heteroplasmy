@@ -174,8 +174,8 @@ for f in trimI_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
 
 
 ##### Gzip the files for final output. Takes a long time.
-# gzip -1 unmerged_$(echo "${fwd_name%_*_*_*_*.*.*}").1.fastq
-# gzip -1 unmerged_$(echo "${fwd_name%_*_*_*_*.*.*}").2.fastq
+gzip -1 unmerged_$(echo "${fwd_name%_*_*_*_*.*.*}").1.fastq
+gzip -1 unmerged_$(echo "${fwd_name%_*_*_*_*.*.*}").2.fastq
 
 
 ##### Remove temporary files
