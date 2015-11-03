@@ -131,7 +131,7 @@ fwd_reads=$(find $inputdirectory -name '*R1*.gz')
 rev_reads=$(find $inputdirectory -name '*R2*.gz')
 fwd_name=$(basename $fwd_reads)
 rev_name=$(basename $rev_reads)
-tempfile="${fwd_reads##*/}"
+tempfile="${fwd_name##*/}"
 
 
 ##### Output file.
@@ -165,7 +165,7 @@ cd $outputdirectory
 
 
 ##### Separate files. Not sure how to deal with this naming convention.
-fastqutils unmerge $wsp_trim_mergepe unmerged_$(echo "${fwd_reads%_*_*_*_*.*.*}")
+fastqutils unmerge $wsp_trim_mergepe unmerged_$(echo "${fwd_name%_*_*_*_*.*.*}")
 
 
 #### Rename the file where reads have been trimmed, N's removed, length checked and pairs checked.
