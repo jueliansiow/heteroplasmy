@@ -134,29 +134,15 @@ if [ -z "$inputdirectory" ]; then
     exit 1
 fi
 
-echo $inputdirectory
-echo $outputdirectory
-echo $numreads
-echo $arc_config
-
-
-
-##### find/define files and directories.
-fwd_reads=$(find $inputdirectory -name '*R1*.gz')
-rev_reads=$(find $inputdirectory -name '*R2*.gz')
-fwd_name=$(basename $fwd_reads)
-rev_name=$(basename $rev_reads)
+echo Input_directory=$inputdirectory
+echo Output_directory=$outputdirectory
+echo Number_of_reads=$numreads
+echo Path_to_ARC_config=$arc_config
 
 
 ##### Output file.
-temp1=$outputdirectory"/temp1.fq"
-temp2=$outputdirectory"/temp2.fq"
-mergepe=$outputdirectory"/mergepe.fq"
-trim_mergepe=$outputdirectory"/trim_mergepe.fq"
-wsp_trim_mergepe=$outputdirectory"/wsp_trim_mergepe.fq"
-trimI=$outputdirectory"/trimI_$fwd_name"
-fwd_trim=$outputdirectory"/fwd_trim.fq"
-rev_trim=$outputdirectory"/rev_trim.fq"
+temp1=$outputdirectory"/temp1.fastq"
+temp2=$outputdirectory"/temp2.fastq"
 
 
 ##### Unzip the files
@@ -168,8 +154,8 @@ gzcat $rev_reads > $temp2
 cd $outputdirectory
 
 ##### Run the subset script.
-seqtk sample -s100 temptrim.1.fastq $numreads > fwd_trim.fastq
-seqtk sample -s100 temptrim.2.fastq $numreads > rev_trim.fastq
+seqtk sample -s100 $temp1 $numreads > fwd_trim.fastq
+seqtk sample -s100 $temp2 $numreads > rev_trim.fastq
 
 
 ##### Run the ARC assembler
@@ -179,9 +165,6 @@ arc -c $arc_config
 ##### Remove temporary files
 rm $temp1
 rm $temp2
-rm $mergepe
-rm $trim_mergepe
-rm $subtrim_mergepe
 
 
 exit
