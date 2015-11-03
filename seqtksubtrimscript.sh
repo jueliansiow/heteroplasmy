@@ -131,6 +131,7 @@ fwd_reads=$(find $inputdirectory -name '*R1*.gz')
 rev_reads=$(find $inputdirectory -name '*R2*.gz')
 fwd_name=$(basename $fwd_reads)
 rev_name=$(basename $rev_reads)
+tempfile="${fwd_reads##*/}"
 
 
 ##### Output file.
@@ -140,10 +141,6 @@ mergepe=$outputdirectory"/mergepe.fq"
 trim_mergepe=$outputdirectory"/trim_mergepe.fq"
 wsp_trim_mergepe=$outputdirectory"/wsp_trim_mergepe.fq"
 trimI=$outputdirectory"/trimI_$fwd_name"
-fwd_trim=$outputdirectory"/fwd_trim.fq"
-rev_trim=$outputdirectory"/rev_trim.fq"
-fwd_final_name=$outputdirectory"/sub_$fwd_name"
-rev_final_name=$outputdirectory"/sub_$rev_name"
 
 
 ##### Unzip the files
@@ -168,7 +165,13 @@ cd $outputdirectory
 
 
 ##### Separate files. Not sure how to deal with this naming convention.
-fastqutils unmerge -gz $wsp_trim_mergepe temptrim
+fastqutils unmerge $wsp_trim_mergepe $(echo "${fwd_reads%_*_*_*_*.*.*}")
+
+
+#### Rename the file where reads have been trimmed, N's removed, length checked and pairs checked.
+mv $wsp_trim_mergepe $trimI
+for f in trimI_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
+
 
 
 ##### Remove temporary files
@@ -176,4 +179,3 @@ rm $temp1
 rm $temp2
 rm $mergepe
 rm $trim_mergepe
-rm $subtrim_mergepe
