@@ -15,7 +15,7 @@ Seqtk
 $ git clone https://github.com/lh3/seqtk.git
 $ cd seqtk
 $ make
-$ cp seqtk /usr/local/bin
+$ export PATH=$PATH:"$(pwd)"
 
 
 Fastqutils - requires python. Run "$ sh init.sh" if the make step does not work.
@@ -24,4 +24,7 @@ $ git clone git://github.com/ngsutils/ngsutils.git
 $ cd ngsutils 
 $ make
 $ cd bin
-$ cp ngsutils /usr/local/bin
+$ export PATH=$PATH:"$(pwd)"
+
+
+ARC_assembler
