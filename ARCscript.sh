@@ -13,7 +13,7 @@ function show_help()
     echo "\t-o --outputdirectory= Enter the directory where files will be output to after analysis."
     echo "\t-i --inputdirectory= Enter the directory where the files are to be used for analysis."
     echo "\t-a --arc_config= Enter the path to the ARC config file that has been supplied with this script."
-    echo "\t-r --arc_reference= Enter the path to the reference file that ARC needs for assembly
+    echo "\t-r --arc_reference= Enter the path to the reference file that ARC needs for assembly"
     echo ""
 }
 
@@ -68,7 +68,7 @@ while :; do
             break
             ;;
             
-		-m|--arc_config)       # Takes an option argument, ensuring it has been specified.
+		-a|--arc_config)       # Takes an option argument, ensuring it has been specified.
             if [ -n "$2" ]; then
                 arc_config=$2
                 shift 2
