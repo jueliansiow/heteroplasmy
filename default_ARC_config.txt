@@ -15,23 +15,22 @@
 ## FileName: path for fasta/fastq file
 ## FileType: PE1, PE2, or SE
 ## FileFormat: fasta or fastq
-# reference=./eucmelliodora.fa
+# reference=./arcref.fa
 # numcycles=10
 # mapper=bowtie2
 # assembler=spades
-# nprocs=8
+# nprocs=4
 # format=fastq
 # verbose=True
 # urt=False
 # map_against_reads=False
-# assemblytimeout=10
+# assemblytimeout=15
 # bowtie2_k=5
 # rip=False
 # cdna=False
-# subsample=0.05
+# subsample=1
 # maskrepeats=True
 # sloppymapping=False
 Sample_ID	FileName	FileType
-Sample1	./eucbranch001r1.fastq	PE1
-Sample1	./eucbranch001r2.fastq	PE2
-
+Sample1	./fwd_trim.fastq	PE1
+Sample1	./rev_trim.fastq	PE2
