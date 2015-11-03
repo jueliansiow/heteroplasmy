@@ -206,5 +206,4 @@ rm $temp1
 rm $temp2
 rm arcref.fa
 
-
 exit
