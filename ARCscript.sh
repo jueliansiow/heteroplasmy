@@ -166,8 +166,8 @@ echo Path_to_ARC_reference=$arc_reference
 
 
 ##### find/define files and directories.
-fwd_reads=$(find $inputdirectory -name 'unmerged*.1.fastq')
-rev_reads=$(find $inputdirectory -name 'unmerged*.2.fastq')
+fwd_reads=$(find $inputdirectory -name 'unmerged*.1.fastq.gz')
+rev_reads=$(find $inputdirectory -name 'unmerged*.2.fastq.gz')
 fwd_name=$(basename $fwd_reads)
 rev_name=$(basename $rev_reads)
 
