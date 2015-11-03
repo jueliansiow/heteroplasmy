@@ -13,6 +13,7 @@ function show_help()
     echo "\t-o --outputdirectory= Enter the directory where files will be output to after analysis."
     echo "\t-i --inputdirectory= Enter the directory where the files are to be used for analysis."
     echo "\t-a --arc_config= Enter the path to the ARC config file that has been supplied with this script."
+    echo "\t-r --arc_reference= Enter the path to the reference file that ARC needs for assembly
     echo ""
 }
 
@@ -20,6 +21,7 @@ numreads=
 outputdirectory=
 arc_config=
 inputdirectory=
+arc_reference=
 
 while :; do
     case $1 in
@@ -83,6 +85,23 @@ while :; do
             printf 'ERROR: "--arc_config" requires a non-empty option argument.\n' >&2
             exit 1
             ;;
+		-r|--arc_reference)       # Takes an option argument, ensuring it has been specified.
+            if [ -n "$2" ]; then
+                arc_reference=$2
+                shift 2
+                continue
+            else
+                printf 'ERROR: "--arc_reference" requires a non-empty option argument.\n' >&2
+                exit 1
+            fi
+            ;;
+        --arc_reference=?*)
+            minreadlgth=${1#*=} # Delete everything up to "=" and assign the remainder.
+            ;;
+        --arc_reference=)         # Handle the case of an empty --file=
+            printf 'ERROR: "--arc_reference" requires a non-empty option argument.\n' >&2
+            exit 1
+            ;;
 		-i|--intputdirectory)
             if [ -n "$2" ]; then
                 inputdirectory=$2
@@ -134,10 +153,23 @@ if [ -z "$inputdirectory" ]; then
     exit 1
 fi
 
+if [ -z "$arc_reference" ]; then
+    printf 'ERROR: option "--arc_reference FILE" not given. See --help.\n' >&2
+    exit 1
+fi
+
 echo Input_directory=$inputdirectory
 echo Output_directory=$outputdirectory
 echo Number_of_reads=$numreads
 echo Path_to_ARC_config=$arc_config
+echo Path_to_ARC_reference=$arc_reference
+
+
+##### find/define files and directories.
+fwd_reads=$(find $inputdirectory -name 'unmerged*.1.fastq')
+rev_reads=$(find $inputdirectory -name 'unmerged*.2.fastq')
+fwd_name=$(basename $fwd_reads)
+rev_name=$(basename $rev_reads)
 
 
 ##### Output file.
@@ -145,26 +177,34 @@ temp1=$outputdirectory"/temp1.fastq"
 temp2=$outputdirectory"/temp2.fastq"
 
 
-##### Unzip the files
+##### Unzip the files.
 gzcat $fwd_reads > $temp1
 gzcat $rev_reads > $temp2
 
 
-##### Change the working directory
+##### Change the working directory.
 cd $outputdirectory
+
 
 ##### Run the subset script.
 seqtk sample -s100 $temp1 $numreads > fwd_trim.fastq
 seqtk sample -s100 $temp2 $numreads > rev_trim.fastq
 
 
-##### Run the ARC assembler
-arc -c $arc_config
+##### Copy the ARC_reference file from the specified path to the output directory and rename it.
+cp $arc_reference $outputdirectory
+mv $(basename $arc_reference) arcref.fa
+
+
+##### Copy the ARC_config file from the specified path to the output directory and the run the ARC assembler.
+cp $arc_config $outputdirectory
+arc -c ./ARC_config.txt
 
 
 ##### Remove temporary files
 rm $temp1
 rm $temp2
+rm arcref.fa
 
 
 exit
