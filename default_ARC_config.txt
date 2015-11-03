@@ -1,0 +1,37 @@
+## Name=value pairs:
+## reference: contains reference sequences in fasta format
+## numcycles: maximum number of times to try remapping
+## mapper: the mapper to use (blat/bowtie2)
+## assembler: the assembler to use (newbler/spades)
+## nprocs: number of cores to use
+## format: fastq or fastq, all must be the same
+## verbose: control mapping/assembly log generation (True/False)
+## urt: For Newbler, enable use read tips mode (True/False)
+## map_against_reads: On iteration 1, skip assembly, map against mapped reads (True/False)
+## assemblytimeout: kill assemblies and discard targets if they take longer than N minutes
+##
+## Columns:
+## Sample_ID:Sample_ID
+## FileName: path for fasta/fastq file
+## FileType: PE1, PE2, or SE
+## FileFormat: fasta or fastq
+# reference=./eucmelliodora.fa
+# numcycles=10
+# mapper=bowtie2
+# assembler=spades
+# nprocs=8
+# format=fastq
+# verbose=True
+# urt=False
+# map_against_reads=False
+# assemblytimeout=10
+# bowtie2_k=5
+# rip=False
+# cdna=False
+# subsample=0.05
+# maskrepeats=True
+# sloppymapping=False
+Sample_ID	FileName	FileType
+Sample1	./eucbranch001r1.fastq	PE1
+Sample1	./eucbranch001r2.fastq	PE2
+
