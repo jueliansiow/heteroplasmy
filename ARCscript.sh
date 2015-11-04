@@ -113,7 +113,7 @@ while :; do
             fi
             ;;
         --inputdirectory=?*)
-            outputdirectory=${1#*=} # Delete everything up to "=" and assign the remainder.
+            inputdirectory=${1#*=} # Delete everything up to "=" and assign the remainder.
             ;;
         --inputdirectory=)         # Handle the case of an empty --file=
             printf 'ERROR: "--inputdirectory" requires a non-empty option argument.\n' >&2
