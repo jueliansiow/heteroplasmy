@@ -25,16 +25,6 @@ while :; do
             show_help
             exit
             ;;
-        -n|--numreads)       # Takes an option argument, ensuring it has been specified.
-            if [ -n "$2" ]; then
-                numreads=$2
-                shift 2
-                continue
-            else
-                printf 'ERROR: "--numreads" requires a non-empty option argument.\n' >&2
-                exit 1
-            fi
-            ;;
  		-o|--outputdirectory)
             if [ -n "$2" ]; then
                 outputdirectory=$2
@@ -55,8 +45,7 @@ while :; do
             shift
             break
             ;;
-            
-		-m|--minreadlgth)       # Takes an option argument, ensuring it has been specified.
+		-m|--minreadlgth)
             if [ -n "$2" ]; then
                 minreadlgth=$2
                 shift 2
@@ -72,6 +61,9 @@ while :; do
         --minreadlgth=)         # Handle the case of an empty --file=
             printf 'ERROR: "--minreadlgth" requires a non-empty option argument.\n' >&2
             exit 1
+            ;;        --)              # End of all options.
+            shift
+            break
             ;;
 		-i|--intputdirectory)
             if [ -n "$2" ]; then
@@ -103,6 +95,13 @@ while :; do
     shift
 done
 
+
+##### 
+echo Input_directory=$inputdirectory
+echo Output_directory=$outputdirectory
+echo Minimum_read_length=$minreadlgth
+
+
 ##### Suppose --numreads is a required option. Ensure the variable "file" has been set and exit if not.
 if [ -z "$outputdirectory" ]; then
     printf 'ERROR: option "--outputdirectory FILE" not given. See --help.\n' >&2
@@ -119,11 +118,6 @@ if [ -z "$inputdirectory" ]; then
     exit 1
 fi
 
-
-##### 
-echo Input_directory=$inputdirectory
-echo Output_directory=$outputdirectory
-echo Minimum_read_length=$minreadlgth
 
 
 ##### find/define files and directories.
