@@ -17,7 +17,7 @@ function show_help()
     echo "\t-r --arc_reference= Enter the path to the reference file that ARC needs for assembly"
     echo "\t-k --min_readlgth= Enter the mininum read length you would like to keep after trimming."
     echo "\t-t --trimscript= Enter the path to where the trimming script lives."
-    echo "\t-s --arcscript= Enter the path to where the arc script lives."
+    echo "\t-s --arc_script= Enter the path to where the arc script lives."
     echo ""
 }
 
@@ -28,7 +28,7 @@ arc_reference=
 folderdirectory=
 trimscript=
 min_readlgth=
-arcscript=
+arc_script=
 
 
 while :; do
@@ -145,21 +145,21 @@ while :; do
             shift
             break
             ;;
-        -s|--arcscript)
+        -s|--arc_script)
             if [ -n "$2" ]; then
-                arcscript=$2
+                arc_script=$2
                 shift 2
                 continue
             else
-                printf 'ERROR: "--arcscript" requires a non-empty option argument.\n' >&2
+                printf 'ERROR: "--arc_script" requires a non-empty option argument.\n' >&2
                 exit 1
             fi
             ;;
-        --arcscript=?*)
+        --arc_script=?*)
             arcscript=${1#*=} # Delete everything up to "=" and assign the remainder.
             ;;
-        --arcscript=)         # Handle the case of an empty --file=
-            printf 'ERROR: "--arcscript" requires a non-empty option argument.\n' >&2
+        --arc_script=)         # Handle the case of an empty --file=
+            printf 'ERROR: "--arc_script" requires a non-empty option argument.\n' >&2
             exit 1
             ;;        --)              # End of all options.
             shift
@@ -196,47 +196,6 @@ while :; do
 done
 
 
-##### Suppose --numreads is a required option. Ensure the variable "file" has been set and exit if not.
-if [ -z "$num_reads" ]; then
-    printf 'ERROR: option "--num_reads FILE" not given. See --help.\n' >&2
-    exit 1
-fi
-
-if [ -z "$outdirectory" ]; then
-    printf 'ERROR: option "--outdirectory FILE" not given. See --help.\n' >&2
-    exit 1
-fi
-
-if [ -z "$arc_config" ]; then
-    printf 'ERROR: option "--arc_config FILE" not given. See --help.\n' >&2
-    exit 1
-fi
-
-if [ -z "$folderdirectory" ]; then
-    printf 'ERROR: option "--inputdirectory FILE" not given. See --help.\n' >&2
-    exit 1
-fi
-
-if [ -z "$arc_reference" ]; then
-    printf 'ERROR: option "--arc_reference FILE" not given. See --help.\n' >&2
-    exit 1
-fi
-
-if [ -z "$min_readlgth" ]; then
-    printf 'ERROR: option "--min_readlgth FILE" not given. See --help.\n' >&2
-    exit 1
-fi
-
-if [ -z "$trimscript" ]; then
-    printf 'ERROR: option "--inputdirectory FILE" not given. See --help.\n' >&2
-    exit 1
-fi
-
-if [ -z "$arcscript" ]; then
-    printf 'ERROR: option "--inputdirectory FILE" not given. See --help.\n' >&2
-    exit 1
-fi
-
 
 echo Out_directory=$outdirectory
 echo Folder_directory=$folderdirectory
@@ -245,8 +204,50 @@ echo Minium_read_length=$min_readlgth
 echo Path_to_ARC_config=$arc_config
 echo Path_to_ARC_reference=$arc_reference
 echo Path_to_trimming_script=$trimscript
-echo Path_to_arcscript=$arcscript
+echo Path_to_arc_script=$arc_script
 
+
+
+##### Suppose --numreads is a required option. Ensure the variable "file" has been set and exit if not.
+if [ -z "$num_reads" ]; then
+    printf 'ERROR: option "--num_reads Number" not given. See --help.\n' >&2
+    exit 1
+fi
+
+if [ -z "$outdirectory" ]; then
+    printf 'ERROR: option "--outdirectory Path" not given. See --help.\n' >&2
+    exit 1
+fi
+
+if [ -z "$arc_config" ]; then
+    printf 'ERROR: option "--arc_config Path" not given. See --help.\n' >&2
+    exit 1
+fi
+
+if [ -z "$folderdirectory" ]; then
+    printf 'ERROR: option "--folderdirectory Path" not given. See --help.\n' >&2
+    exit 1
+fi
+
+if [ -z "$arc_reference" ]; then
+    printf 'ERROR: option "--arc_reference Path" not given. See --help.\n' >&2
+    exit 1
+fi
+
+if [ -z "$min_readlgth" ]; then
+    printf 'ERROR: option "--min_readlgth Number" not given. See --help.\n' >&2
+    exit 1
+fi
+
+if [ -z "$trimscript" ]; then
+    printf 'ERROR: option "--trimscript Path" not given. See --help.\n' >&2
+    exit 1
+fi
+
+if [ -z "$arc_script" ]; then
+    printf 'ERROR: option "--arc_script Path" not given. See --help.\n' >&2
+    exit 1
+fi
 
 
 cd $folderdirectory
