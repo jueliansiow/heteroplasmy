@@ -261,7 +261,7 @@ do
 	sh $trimscript -i $(pwd) -m $min_readlgth -o $outdirectory/$f/trim
 	cd $folderdirectory
 	mkdir -p $outdirectory/$f/ARC
-	sh $arcscript -i $outdirectory/$f/trim -n $num_reads -o $outdirectory/$f/ARC -a $arc_config -r $arc_reference
+	sh $arc_script -i $outdirectory/$f/trim -n $num_reads -o $outdirectory/$f/ARC -a $arc_config -r $arc_reference
 	echo "Completed processing $f file."
 	
 done
