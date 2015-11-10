@@ -182,6 +182,10 @@ gzcat $fwd_reads > $temp1
 gzcat $rev_reads > $temp2
 
 
+##### Message
+echo "Files unzipped"
+
+
 ##### Change the working directory.
 cd $outputdirectory
 
@@ -191,14 +195,26 @@ seqtk sample -s100 $temp1 $numreads > fwd_trim.fastq
 seqtk sample -s100 $temp2 $numreads > rev_trim.fastq
 
 
+##### Message
+echo "Files subsampled"
+
+
 ##### Copy the ARC_reference file from the specified path to the output directory and rename it.
 cp $arc_reference $outputdirectory
 mv $(basename $arc_reference) arcref.fa
 
 
+##### Message
+echo "Starting ARC assembly"
+
+
 ##### Copy the ARC_config file from the specified path to the output directory and the run the ARC assembler.
 cp $arc_config $outputdirectory
 arc -c ./ARC_config.txt
+
+
+##### Message
+echo "Completed"
 
 
 ##### Remove temporary files
