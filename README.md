@@ -2,29 +2,16 @@
 
 Introduction
 
-This script utilizes existing NGS programs and streamlines their usage
-
-
+This script utilizes existing NGS programs (Seqtk, Fastqutils, ARC assembler by iBest) and streamlines their usage.
 
 
 
 Pre-requisites
 
-Seqtk
+Seqtk and Fastqutils. These can be installed by runnning the shell script 
 
-$ git clone https://github.com/lh3/seqtk.git
-$ cd seqtk
-$ make
-$ export PATH=$PATH:"$(pwd)"
+	$ sh installprereq.sh -i /path/to/install/directory
 
-
-Fastqutils - requires python. Run "$ sh init.sh" if the make step does not work.
-
-$ git clone git://github.com/ngsutils/ngsutils.git 
-$ cd ngsutils 
-$ make
-$ cd bin
-$ export PATH=$PATH:"$(pwd)"
 
 
 ARC_assembler - requires Bowtie 2, Spades, biopython and python which would have been installed by Fastqutils.
