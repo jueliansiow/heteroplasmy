@@ -33,6 +33,7 @@ To install dependencies.
 
 
 To install the ARC_assembler after all dependencies have been installed.
+
 	$ git clone git://github.com/ibest/ARC.git
 	$ cd ARC
 	$ python setup.py install
@@ -41,5 +42,6 @@ To install the ARC_assembler after all dependencies have been installed.
 	
 	
 Test to see if the ARC assembler works
+
 	$ cd test_data
 	$ ARC
