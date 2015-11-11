@@ -214,7 +214,14 @@ arc -c ./ARC_config.txt
 
 
 ##### Message
-echo "Completed"
+echo "Cleaning up"
+
+
+##### Renaming some files
+mv fwd_trim.fastq $fwd_name
+mv rev_trim.fastq $rev_name
+for f in unmerged_*.?.fastq.gz; do mv $f `basename $f .fastq.gz`.fastq; done
+for f in unmerged_*.?.fastq; do mv $f subsampled_`basename $f unmerged`; done
 
 
 ##### Remove temporary files
@@ -222,4 +229,6 @@ rm $temp1
 rm $temp2
 rm arcref.fa
 
-exit
+
+##### Message
+echo "Completed"
