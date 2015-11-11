@@ -29,7 +29,7 @@ To install dependencies.
 	Go to "https://www.continuum.io/downloads" and download the installer.
 	Run the installer for anaconda
 	Once anaconda is installed run the following
-		$ conda install biopython
+	$ conda install biopython
 
 
 To install the ARC_assembler after all dependencies have been installed.
