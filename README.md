@@ -4,7 +4,7 @@ Introduction
 
 This script utilizes existing NGS programs (Seqtk, Fastqutils, ARC assembler by iBest) and streamlines their usage.
 
-###########
+--------------------
 
 Pre-requisites
 
@@ -45,6 +45,6 @@ Test to see if the ARC assembler works
 	$ ARC
 
 
-##########
+--------------------
 
 Running the scripts
