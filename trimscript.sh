@@ -137,21 +137,41 @@ wsp_trim_mergepe=$outputdirectory"/wsp_trim_mergepe.fq"
 trimI=$outputdirectory"/trimI_$fwd_name"
 
 
+##### Message
+echo "Starting trimming process. Unzipping files ..."
+
+
 ##### Unzip the files
 gzcat $fwd_reads > $temp1
 gzcat $rev_reads > $temp2
+
+
+##### Message
+echo "Merging files ..."
 
 
 ##### Interleave the pair end files
 seqtk mergepe $temp1 $temp2 > $mergepe
 
 
+##### Message
+echo "Running quality trimming at 0.05% probability or a PHRED score of 13 ..."
+
+
 ##### Run the quality trimming. Default is set to 0.05% probability.
 seqtk trimfq $mergepe > $trim_mergepe
 
 
+##### Message
+echo "Removing reads with N's, reads below length threshold $minreadlgth , and reads with no pair ..."
+
+
 ##### Remove reads that have N's in it, reads below length threshold and do not have a pair.
 fastqutils filter -wildcard 1 -size $minreadlgth -paired $trim_mergepe > $wsp_trim_mergepe
+
+
+##### Message
+echo "Unmerging files ..."
 
 
 ##### Change the working directory so that the intermediate file is stored in the output directory.
@@ -160,6 +180,10 @@ cd $outputdirectory
 
 ##### Separate files. Not sure how to deal with this naming convention.
 fastqutils unmerge $wsp_trim_mergepe unmerged_$(echo "${fwd_name%_*_*_*_*.*.*}")
+
+
+##### Message
+echo "Compressing files for output ..."
 
 
 #### Rename the file where reads have been trimmed, N's removed, length checked and pairs checked.
@@ -172,8 +196,16 @@ gzip -1 unmerged_$(echo "${fwd_name%_*_*_*_*.*.*}").1.fastq
 gzip -1 unmerged_$(echo "${fwd_name%_*_*_*_*.*.*}").2.fastq
 
 
+##### Message
+echo "Cleaning up ..."
+
+
 ##### Remove temporary files
 rm $temp1
 rm $temp2
 rm $mergepe
 rm $trim_mergepe
+
+
+##### Message
+echo "Done"
