@@ -134,7 +134,6 @@ temp2=$outputdirectory"/temp2.fq"
 mergepe=$outputdirectory"/mergepe.fq"
 trim_mergepe=$outputdirectory"/trim_mergepe.fq"
 wsp_trim_mergepe=$outputdirectory"/wsp_trim_mergepe.fq"
-trimI=$outputdirectory"/trimI_$fwd_name"
 
 
 ##### Message
@@ -187,13 +186,13 @@ echo "Compressing files for output ..."
 
 
 #### Rename the file where reads have been trimmed, N's removed, length checked and pairs checked.
-mv $wsp_trim_mergepe $trimI
-for f in trimI_*.fastq.gz; do mv $f `basename $f .fastq.gz`.fq; done
+mv $wsp_trim_mergepe trimmed_$(echo "${fwd_name%.*.*}").fastq
 
 
 ##### Gzip the files for final output.
 gzip -1 unmerged_$(echo "${fwd_name%_*_*_*_*.*.*}").1.fastq
 gzip -1 unmerged_$(echo "${fwd_name%_*_*_*_*.*.*}").2.fastq
+gzip -1 trimmed_$(echo "${fwd_name%.*.*}").fastq
 
 
 ##### Message
