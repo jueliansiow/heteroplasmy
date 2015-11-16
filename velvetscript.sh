@@ -198,11 +198,6 @@ if [ -z "$inputdirectory" ]; then
     exit 1
 fi
 
-if [ -z "$velvetgoptions" ]; then
-    printf 'ERROR: option "--velvetgoptions FILE" not given. See --help.\n' >&2
-    exit 1
-fi
-
 
 ##### find/define files and directories.
 fwd_reads=$(find $inputdirectory -name '*.1.fastq')
