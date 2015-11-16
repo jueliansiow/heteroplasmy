@@ -18,6 +18,8 @@ function show_help()
     echo "\t-k --min_readlgth= Enter the mininum read length you would like to keep after trimming."
     echo "\t-t --trimscript= Enter the path to where the trimming script lives."
     echo "\t-s --arc_script= Enter the path to where the arc script lives."
+    echo "\t-g --velvetg_options= Enter the options that you want velvetg to run. You must include double quotation marks. "[-cov_cutoff number] [-min_contig_lgth number] [-exp_cov number]". Refer to the velvet manual for a full list of options. The clean option has already been added."
+    echo "\t-p --velveth_options= Enter range of kmer values that you want to run. "[-l|--lowkmer number] [-k|--highkmer number] [-a|--interval number]"."    
     echo ""
 }
 
@@ -29,6 +31,8 @@ folderdirectory=
 trimscript=
 min_readlgth=
 arc_script=
+velvetg_options=
+velveth_options=
 
 
 while :; do
@@ -145,6 +149,46 @@ while :; do
             shift
             break
             ;;
+        -g|--velvetg_options)
+            if [ -n "$2" ]; then
+                velvetg_options=$2
+                shift 2
+                continue
+            else
+                printf 'ERROR: "--velvetg_options" requires a non-empty option argument.\n' >&2
+                exit 1
+            fi
+            ;;
+        --velvetg_options=?*)
+            velvetg_options=${1#*=} # Delete everything up to "=" and assign the remainder.
+            ;;
+        --velvetg_options=)         # Handle the case of an empty --file=
+            printf 'ERROR: "--velvetg_options" requires a non-empty option argument.\n' >&2
+            exit 1
+            ;;        --)              # End of all options.
+            shift
+            break
+            ;;
+        -p|--velveth_options)
+            if [ -n "$2" ]; then
+                velveth_options=$2
+                shift 2
+                continue
+            else
+                printf 'ERROR: "--velveth_options" requires a non-empty option argument.\n' >&2
+                exit 1
+            fi
+            ;;
+        --velveth_options=?*)
+            velveth_options=${1#*=} # Delete everything up to "=" and assign the remainder.
+            ;;
+        --velveth_options=)         # Handle the case of an empty --file=
+            printf 'ERROR: "--velveth_options" requires a non-empty option argument.\n' >&2
+            exit 1
+            ;;        --)              # End of all options.
+            shift
+            break
+            ;;
         -s|--arc_script)
             if [ -n "$2" ]; then
                 arc_script=$2
@@ -249,6 +293,10 @@ if [ -z "$arc_script" ]; then
     exit 1
 fi
 
+if [ -z "$velveth_options" ]; then
+    printf 'ERROR: option "--velveth_options Path" not given. See --help.\n' >&2
+    exit 1
+fi
 
 cd $folderdirectory
 
@@ -262,6 +310,8 @@ do
 	cd $folderdirectory
 	mkdir -p $outdirectory/$f/ARC
 	sh $arc_script -i $outdirectory/$f/trim -n $num_reads -o $outdirectory/$f/ARC -a $arc_config -r $arc_reference
+	mkdir -p $outdirectory/$f/velvet
+	sh $velvetscript -i $outdirectory/$f/ARC -o $outdirectory/$f/velvet -g $velvetg_options -p $velveth_options
 	echo "Completed processing $f file."
 	
 done
