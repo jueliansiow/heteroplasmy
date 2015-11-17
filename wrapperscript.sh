@@ -1,6 +1,7 @@
 #!/bin/sh
 
 
+
 ##### Parsing arguments to the rest of the file.
 
 
@@ -262,7 +263,6 @@ while :; do
 done
 
 
-
 echo Out_directory=$outdirectory
 echo Folder_directory=$folderdirectory
 echo Number_of_reads=$num_reads
@@ -338,6 +338,7 @@ cd $folderdirectory
 
 for f in Sample_*
 do 
+	{
 	echo "... Processing $f file ..."
 	mkdir -p $outdirectory/$f/trim
 	cd $f
@@ -348,7 +349,12 @@ do
 	mkdir -p $outdirectory/$f/velvet
 	sh $velvet_script -i $outdirectory/$f/ARC -o $outdirectory/$f/velvet -g "$velvetg_commands" $velveth_commands
 	echo "Completed processing $f file."
-	
+	} | tee $outdirectory/$f/logfile
 done
 
+
 echo "Completed processing all files in $folderdirectory"
+
+
+
+echo "Log Location should be: [ $outdirectory/log ]"
